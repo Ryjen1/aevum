@@ -1,0 +1,30 @@
+[profile.default]
+src = "src"
+out = "out"
+test = "test"
+libs = ["lib"]
+solc = "0.8.20"
+optimizer = true
+optimizer_runs = 200
+via_ir = false
+fs_permissions = [{ access = "read", path = "./out" }]
+
+# Verbose revert reasons in test traces
+verbosity = 2
+
+[fmt]
+line_length = 120
+tab_width = 4
+bracket_spacing = false
+int_types = "long"
+multiline_func_header = "attributes_first"
+quote_style = "double"
+number_underscore = "thousands"
+
+[rpc_endpoints]
+og_mainnet = "${OG_RPC_URL}"
+og_testnet = "${OG_RPC_URL_TESTNET}"
+
+[etherscan]
+og_mainnet = { key = "${OG_EXPLORER_API_KEY}", url = "${OG_EXPLORER_URL}" }
+og_testnet = { key = "${OG_EXPLORER_API_KEY}", url = "${OG_EXPLORER_URL_TESTNET}" }

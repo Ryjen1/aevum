@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.local
+.env.*.local
+.cache/
+*.log
+.DS_Store
+.tsbuildinfo
+.eslintcache
+junit.xml

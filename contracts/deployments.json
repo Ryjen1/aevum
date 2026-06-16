@@ -1,0 +1,13 @@
+{
+  "network": "0G Galileo Testnet",
+  "chainId": 16602,
+  "rpcUrl": "https://evmrpc-testnet.0g.ai",
+  "explorer": "https://chainscan-galileo.0g.ai",
+  "deployer": "0x1852EBfaBA9CA73bd19760542B5Ab7278F495d0E",
+  "contracts": {
+    "AevumRegistry": "0x406f997ea6b857432ade179e87fd00e94955ed26",
+    "AevumMemory": "0xa79c2a02d56bb1145f3c03d17d4f94c4d2c5055b",
+    "AevumAgenticID": "0xf9ba5e30218b24c521500fe880ee8eaad2897055"
+  },
+  "deployedAt": "2026-06-16T14:32:00Z"
+}

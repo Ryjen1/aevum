@@ -1,0 +1,219 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --terminal-bg: #0a0a0a;
+  --terminal-surface: #111111;
+  --terminal-border: #222222;
+  --terminal-text: #e0e0e0;
+  --terminal-muted: #666666;
+  --terminal-dim: #333333;
+  --terminal-green: #00ff88;
+  --terminal-amber: #ffaa00;
+  --terminal-red: #ff4444;
+  --terminal-cyan: #00aaff;
+  --terminal-magenta: #ff00ff;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+}
+
+body {
+  margin: 0;
+  background-color: var(--terminal-bg);
+  color: var(--terminal-text);
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-feature-settings: 'liga' 0, 'calt' 0;
+  min-height: 100vh;
+}
+
+#root {
+  position: relative;
+  overflow-x: hidden;
+}
+
+* {
+  border-radius: 0 !important;
+}
+
+::selection {
+  background: var(--terminal-green);
+  color: #000;
+}
+
+::-moz-selection {
+  background: var(--terminal-green);
+  color: #000;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  outline: none;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 1px solid var(--terminal-green);
+  outline-offset: 0;
+}
+
+@layer components {
+  .term-panel {
+    background-color: var(--terminal-surface);
+    border: 1px solid var(--terminal-border);
+  }
+  .term-divider {
+    color: var(--terminal-border);
+    user-select: none;
+  }
+  .term-green {
+    color: var(--terminal-green);
+  }
+  .term-amber {
+    color: var(--terminal-amber);
+  }
+  .term-red {
+    color: var(--terminal-red);
+  }
+  .term-cyan {
+    color: var(--terminal-cyan);
+  }
+  .term-magenta {
+    color: var(--terminal-magenta);
+  }
+  .term-muted {
+    color: var(--terminal-muted);
+  }
+  .term-dim {
+    color: var(--terminal-dim);
+  }
+  .term-text {
+    color: var(--terminal-text);
+  }
+  .term-bg {
+    background-color: var(--terminal-bg);
+  }
+  .term-border {
+    border-color: var(--terminal-border);
+  }
+  .term-btn {
+    @apply inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs uppercase tracking-wider;
+    border: 1px solid var(--terminal-border);
+    background: var(--terminal-surface);
+    color: var(--terminal-text);
+    cursor: pointer;
+    transition: all 0.1s ease;
+  }
+  .term-btn:hover:not(:disabled) {
+    border-color: var(--terminal-green);
+    color: var(--terminal-green);
+  }
+  .term-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .term-btn-primary {
+    @apply term-btn;
+    background: var(--terminal-green);
+    color: #000;
+    border-color: var(--terminal-green);
+    font-weight: 600;
+  }
+  .term-btn-primary:hover:not(:disabled) {
+    background: #00cc6a;
+    border-color: #00cc6a;
+    color: #000;
+    box-shadow: var(--terminal-green) 0 0 8px;
+  }
+  .term-input {
+    @apply w-full px-2 py-1.5 text-sm;
+    background: #000;
+    color: var(--terminal-text);
+    border: 1px solid var(--terminal-border);
+  }
+  .term-input:focus {
+    border-color: var(--terminal-green);
+  }
+  .term-input::placeholder {
+    color: var(--terminal-dim);
+  }
+  .blink::after {
+    content: '_';
+    animation: blink 1s steps(1) infinite;
+    color: var(--terminal-green);
+    margin-left: 1px;
+  }
+  .cursor-blink {
+    animation: blink 1s steps(1) infinite;
+  }
+  .term-prompt::before {
+    content: 'aevum > ';
+    color: var(--terminal-green);
+    font-weight: 600;
+  }
+  .scanline-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background: linear-gradient(
+      transparent 0%,
+      rgba(0, 255, 136, 0.02) 50%,
+      transparent 100%
+    );
+    background-size: 100% 4px;
+    opacity: 0.4;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--terminal-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--terminal-dim);
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--terminal-green);
+}
+::-webkit-scrollbar-corner {
+  background: var(--terminal-bg);
+}
+
+/* RainbowKit overrides */
+[data-rk] {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
