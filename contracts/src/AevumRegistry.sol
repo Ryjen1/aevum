@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
@@ -153,19 +153,19 @@ contract AevumRegistry is Ownable, ReentrancyGuard {
         return _registrars[registrar];
     }
 
-    /// @notice Create an agent on behalf of `owner`. Only callable by an authorised registrar.
+    /// @notice Create an agent on behalf of `agentOwner`. Only callable by an authorised registrar.
     /// @dev    Used by AevumAgenticID so that the ERC-721 owner is also the AevumRegistry owner.
     /// @param  name  Agent name.
     /// @param  role  Agent role.
-    /// @param  owner Final owner of the new agent.
+    /// @param  agentOwner Final owner of the new agent.
     /// @return agentId The newly assigned agent id.
-    function createAgentFor(string calldata name, string calldata role, address owner)
+    function createAgentFor(string calldata name, string calldata role, address agentOwner)
         external
         nonReentrant
         returns (uint256 agentId)
     {
         if (!_registrars[msg.sender]) revert NotRegistrar(msg.sender);
-        if (owner == address(0)) revert ZeroAddress();
+        if (agentOwner == address(0)) revert ZeroAddress();
         if (bytes(name).length == 0) revert EmptyName();
 
         _nextAgentId += 1;
@@ -177,32 +177,32 @@ contract AevumRegistry is Ownable, ReentrancyGuard {
             role: role,
             memoryPointer: bytes32(0),
             memorySize: 0,
-            owner: owner,
+            owner: agentOwner,
             createdAt: ts,
             lastUpdated: ts
         });
-        _ownedAgents[owner].push(agentId);
+        _ownedAgents[agentOwner].push(agentId);
 
-        emit AgentCreated(agentId, owner, name, role, block.timestamp);
+        emit AgentCreated(agentId, agentOwner, name, role, block.timestamp);
     }
 
-    /// @notice Create an agent on behalf of `owner` with an initial memory pointer set.
+    /// @notice Create an agent on behalf of `agentOwner` with an initial memory pointer set.
     ///         Only callable by an authorised registrar (e.g. AevumAgenticID on clone).
     /// @param  name  Agent name.
     /// @param  role  Agent role.
-    /// @param  owner Final owner of the new agent.
+    /// @param  agentOwner Final owner of the new agent.
     /// @param  root  Initial 0G Storage root hash.
     /// @param  size  Initial memory size in bytes.
     /// @return agentId The newly assigned agent id.
     function createAgentWithMemory(
         string calldata name,
         string calldata role,
-        address owner,
+        address agentOwner,
         bytes32 root,
         uint256 size
     ) external nonReentrant returns (uint256 agentId) {
         if (!_registrars[msg.sender]) revert NotRegistrar(msg.sender);
-        if (owner == address(0)) revert ZeroAddress();
+        if (agentOwner == address(0)) revert ZeroAddress();
         if (bytes(name).length == 0) revert EmptyName();
         if (root == bytes32(0)) revert ZeroMemoryPointer();
 
@@ -215,13 +215,13 @@ contract AevumRegistry is Ownable, ReentrancyGuard {
             role: role,
             memoryPointer: root,
             memorySize: size,
-            owner: owner,
+            owner: agentOwner,
             createdAt: ts,
             lastUpdated: ts
         });
-        _ownedAgents[owner].push(agentId);
+        _ownedAgents[agentOwner].push(agentId);
 
-        emit AgentCreated(agentId, owner, name, role, block.timestamp);
+        emit AgentCreated(agentId, agentOwner, name, role, block.timestamp);
         emit MemoryUpdated(agentId, bytes32(0), root, size, block.timestamp);
     }
 
@@ -319,10 +319,10 @@ contract AevumRegistry is Ownable, ReentrancyGuard {
     }
 
     /// @notice Return all agent ids owned by an address.
-    /// @param  owner Owner address.
+    /// @param  agentOwner Owner address.
     /// @return Array of agent ids.
-    function getAgentsByOwner(address owner) external view returns (uint256[] memory) {
-        return _ownedAgents[owner];
+    function getAgentsByOwner(address agentOwner) external view returns (uint256[] memory) {
+        return _ownedAgents[agentOwner];
     }
 
     /// @notice Total number of agents ever created.
@@ -351,10 +351,10 @@ contract AevumRegistry is Ownable, ReentrancyGuard {
                               INTERNAL
     //////////////////////////////////////////////////////////////*/
 
-    /// @dev Remove `agentId` from `owner`'s owned-agents list. Maintains order
+    /// @dev Remove `agentId` from `agentOwner`'s owned-agents list. Maintains order
     ///      (swap-with-last) and does not preserve ordering. O(n) on removal.
-    function _removeAgentFromOwner(address owner, uint256 agentId) internal {
-        uint256[] storage list = _ownedAgents[owner];
+    function _removeAgentFromOwner(address agentOwner, uint256 agentId) internal {
+        uint256[] storage list = _ownedAgents[agentOwner];
         uint256 len = list.length;
         for (uint256 i = 0; i < len;) {
             if (list[i] == agentId) {

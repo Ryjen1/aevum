@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
@@ -110,8 +110,8 @@ contract AevumMemory is Ownable, ReentrancyGuard {
 
     /// @dev Reverts if `msg.sender` is not the owner of `agentId`.
     modifier onlyAgentOwner(uint256 agentId) {
-        address owner = registry.ownerOf(agentId);
-        if (owner != msg.sender) revert NotAgentOwner(msg.sender, agentId);
+        address agentOwner = registry.ownerOf(agentId);
+        if (agentOwner != msg.sender) revert NotAgentOwner(msg.sender, agentId);
         _;
     }
 
@@ -172,8 +172,8 @@ contract AevumMemory is Ownable, ReentrancyGuard {
 
         // Check ownership via registry (CEI: external call after state write below is fine
         // because the function is read-only against registry, but we want to revert early).
-        address owner = registry.ownerOf(agentId);
-        if (owner != msg.sender) revert NotAgentOwner(msg.sender, agentId);
+        address agentOwner = registry.ownerOf(agentId);
+        if (agentOwner != msg.sender) revert NotAgentOwner(msg.sender, agentId);
 
         // Effects
         _access[agentId][entryId][user] = true;
@@ -186,8 +186,8 @@ contract AevumMemory is Ownable, ReentrancyGuard {
     function revokeAccess(uint256 agentId, uint256 entryId, address user) external nonReentrant {
         if (_entries[agentId][entryId].entryId == 0) revert EntryDoesNotExist(agentId, entryId);
 
-        address owner = registry.ownerOf(agentId);
-        if (owner != msg.sender) revert NotAgentOwner(msg.sender, agentId);
+        address agentOwner = registry.ownerOf(agentId);
+        if (agentOwner != msg.sender) revert NotAgentOwner(msg.sender, agentId);
 
         // Effects
         _access[agentId][entryId][user] = false;

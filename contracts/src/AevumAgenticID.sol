@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
@@ -152,27 +152,29 @@ contract AevumAgenticID is ERC721, Ownable, AccessControl, ReentrancyGuard {
     /// @notice Mint a new agent NFT. Atomically creates the underlying AevumRegistry
     ///         agent and assigns it to `to`.
     /// @param  to        Recipient of the new NFT (and the AevumRegistry owner).
-    /// @param  name      Human-readable agent name.
+    /// @param  agentName Human-readable agent name.
     /// @param  role      Functional role of the agent.
     /// @param  uri       Token URI (encrypted metadata on 0G Storage).
     /// @return tokenId   The newly minted token id.
-    function mint(address to, string calldata name, string calldata role, string calldata uri)
+    function mint(address to, string calldata agentName, string calldata role, string calldata uri)
         external
         nonReentrant
         returns (uint256 tokenId)
     {
         if (to == address(0)) revert ZeroAddress();
 
-        // Effects (use the registry's registrar entry-point so the AevumRegistry
-        // owner == the NFT owner).
-        uint256 agentId = registry.createAgentFor(name, role, to);
+        // Effects — increment counter first for CEI ordering.
         _nextTokenId += 1;
         tokenId = _nextTokenId;
-        tokenToAgent[tokenId] = agentId;
-        agentToToken[agentId] = tokenId;
         _tokenURIs[tokenId] = uri;
 
-        // Interactions
+        // Interactions — registry call creates the agent.
+        uint256 agentId = registry.createAgentFor(agentName, role, to);
+
+        // Effects — complete state writes after external call.
+        tokenToAgent[tokenId] = agentId;
+        agentToToken[agentId] = tokenId;
+
         _safeMint(to, tokenId);
         emit AgentMinted(tokenId, agentId, to, uri);
     }
@@ -235,10 +237,14 @@ contract AevumAgenticID is ERC721, Ownable, AccessControl, ReentrancyGuard {
         bool ok = ITransferVerifier(oracle).verifyClone(to, sourceTokenId, sealedKey, proof);
         if (!ok) revert OracleVerificationFailed();
 
-        // Effects
+        // Effects — read source data and increment counter before external calls.
         AevumRegistry.Agent memory src = registry.getAgent(tokenToAgent[sourceTokenId]);
         string memory uri = _tokenURIs[sourceTokenId];
+        _nextTokenId += 1;
+        newTokenId = _nextTokenId;
+        _tokenURIs[newTokenId] = uri;
 
+        // Interactions — registry call creates the clone agent.
         uint256 newAgentId;
         if (src.memoryPointer == bytes32(0)) {
             newAgentId = registry.createAgentFor(src.name, src.role, to);
@@ -246,13 +252,11 @@ contract AevumAgenticID is ERC721, Ownable, AccessControl, ReentrancyGuard {
             newAgentId =
                 registry.createAgentWithMemory(src.name, src.role, to, src.memoryPointer, src.memorySize);
         }
-        _nextTokenId += 1;
-        newTokenId = _nextTokenId;
+
+        // Effects — complete state writes after external call.
         tokenToAgent[newTokenId] = newAgentId;
         agentToToken[newAgentId] = newTokenId;
-        _tokenURIs[newTokenId] = uri;
 
-        // Interactions
         _safeMint(to, newTokenId);
         emit AgentCloned(sourceTokenId, newTokenId, to, sealedKey);
     }
@@ -265,8 +269,8 @@ contract AevumAgenticID is ERC721, Ownable, AccessControl, ReentrancyGuard {
     function authorizeUsage(uint256 tokenId, address executor, uint256 permissions) external {
         _requireOwned(tokenId);
         if (executor == address(0)) revert ZeroAddress();
-        address owner = _ownerOf(tokenId);
-        if (msg.sender != owner && !hasRole(DEFAULT_ADMIN_ROLE, msg.sender)) {
+        address tokenOwner = _ownerOf(tokenId);
+        if (msg.sender != tokenOwner && !hasRole(DEFAULT_ADMIN_ROLE, msg.sender)) {
             revert OracleVerificationFailed(); // reuse: caller not authorised
         }
         usagePermissions[tokenId][executor] = permissions;
@@ -276,8 +280,8 @@ contract AevumAgenticID is ERC721, Ownable, AccessControl, ReentrancyGuard {
     /// @notice Revoke any usage authorisation previously granted to `executor`.
     function revokeUsage(uint256 tokenId, address executor) external {
         _requireOwned(tokenId);
-        address owner = _ownerOf(tokenId);
-        if (msg.sender != owner && !hasRole(DEFAULT_ADMIN_ROLE, msg.sender)) {
+        address tokenOwner = _ownerOf(tokenId);
+        if (msg.sender != tokenOwner && !hasRole(DEFAULT_ADMIN_ROLE, msg.sender)) {
             revert OracleVerificationFailed();
         }
         if (usagePermissions[tokenId][executor] == 0) revert NoUsageToRevoke(tokenId, executor);
@@ -294,9 +298,9 @@ contract AevumAgenticID is ERC721, Ownable, AccessControl, ReentrancyGuard {
 
     /// @notice Set the per-token URI (encrypted metadata pointer on 0G Storage).
     function setTokenURI(uint256 tokenId, string calldata uri) external {
-        address owner = _ownerOf(tokenId);
-        if (owner == address(0)) revert AgentNotMinted(tokenId);
-        if (owner != msg.sender) revert NotTokenOwner(msg.sender, tokenId);
+        address tokenOwner = _ownerOf(tokenId);
+        if (tokenOwner == address(0)) revert AgentNotMinted(tokenId);
+        if (tokenOwner != msg.sender) revert NotTokenOwner(msg.sender, tokenId);
         _tokenURIs[tokenId] = uri;
     }
 
