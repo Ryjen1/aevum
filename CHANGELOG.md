@@ -38,13 +38,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned for Wave 2 (2026-07-17) — Core Smart Contracts
-- Full `AevumRegistry` implementation with UUPS upgradeability
-- Full `AevumMemory` with per-agent ACL and scope encoding
-- Full `AevumAgenticID` (ERC-7857) with encrypted metadata URI
-- Foundry test suite ≥ 90% coverage
-- Slither clean
-- Deployment to 0G Galileo testnet
+### Completed for Wave 2 (2026-07-17) — Core Smart Contracts
+- Full `AevumRegistry` implementation: agent creation, memory pointers, ownership transfer, registrar pattern
+- Full `AevumMemory` implementation: append-only memory log, per-agent ACL, pagination, 4 data types
+- Full `AevumAgenticID` (ERC-7857) implementation: NFT minting, oracle-verified transfer/clone, usage permissions
+- Solidity version bumped to 0.8.24 (fixed known compiler bugs)
+- Slither audit: fixed local variable shadowing, improved CEI reentrancy ordering
+- Foundry test suite: 113 tests (52 original + 61 new), ≥ 90% line coverage
+  - `AevumRegistry`: 99.04% lines, 100% branches, 100% functions
+  - `AevumMemory`: 100% lines, 100% branches, 100% functions
+  - `AevumAgenticID`: 96.30% lines, 85% branches, 92.31% functions
+- Fuzz tests for all contracts (createAgent, updateMemoryPointer, logMemory, authorizeUsage)
+- Integration tests: full lifecycle, clone with memory, multi-agent, ACL follows ownership, transfer chains
+- Gas report generated and saved
+- Deployment to 0G Galileo Testnet (chain ID 16602) verified
 
 ### Planned for Wave 3 (2026-08-07) — Memory Pipeline + 0G Storage
 - `MemoryAgent` and `OrchestratorAgent` end-to-end
