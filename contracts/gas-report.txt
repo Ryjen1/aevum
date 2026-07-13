@@ -1,0 +1,265 @@
+No files changed, compilation skipped
+
+Ran 7 tests for test/Integration.t.sol:IntegrationTest
+[PASS] test_acl_followsOwnership() (gas: 866198)
+[PASS] test_clone_copiesMemoryPointer() (gas: 1525647)
+[PASS] test_clone_usesCreateAgentWithMemory() (gas: 841109)
+[PASS] test_fullLifecycle_mintLogTransfer() (gas: 1890158)
+[PASS] test_multiAgent_independentMemories() (gas: 1950996)
+[PASS] test_transferCloneTransfer_chain() (gas: 1119632)
+[PASS] test_usagePermissions_andMemory() (gas: 959569)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 34.12ms (25.48ms CPU time)
+
+Ran 34 tests for test/AevumAgenticID.t.sol:AevumAgenticIDTest
+[PASS] testFuzz_authorizeUsage_randomPermissions(uint256) (runs: 256, μ: 79367, ~: 79334)
+[PASS] test_authorizeAndRevokeUsage() (gas: 134818)
+[PASS] test_authorizeUsage_adminCanAuthorize() (gas: 69025)
+[PASS] test_authorizeUsage_revertsForNonOwner() (gas: 41889)
+[PASS] test_authorizeUsage_revertsOnZeroAddress() (gas: 37371)
+[PASS] test_authorizeUsage_zeroPermissions() (gas: 58751)
+[PASS] test_clone_createsCopy() (gas: 544885)
+[PASS] test_clone_multipleClones() (gas: 966208)
+[PASS] test_clone_noMemoryPointer() (gas: 380866)
+[PASS] test_clone_revertsForNonExistentToken() (gas: 43750)
+[PASS] test_clone_revertsIfOracleDenies() (gas: 86162)
+[PASS] test_clone_revertsOnZeroAddress() (gas: 41077)
+[PASS] test_clone_revertsWhenOracleNotSet() (gas: 4505052)
+[PASS] test_isAuthorizedFor_falseByDefault() (gas: 12258)
+[PASS] test_mint_createsAgentAndNft() (gas: 65581)
+[PASS] test_mint_emitsEvent() (gas: 313682)
+[PASS] test_mint_multipleIncrementsSupply() (gas: 616083)
+[PASS] test_mint_revertsOnZeroAddress() (gas: 37470)
+[PASS] test_revokeUsage_adminCanRevoke() (gas: 94079)
+[PASS] test_revokeUsage_revertsForNonOwner() (gas: 93647)
+[PASS] test_revokeUsage_revertsWhenNone() (gas: 42552)
+[PASS] test_setOracle_adminOnly() (gas: 71362)
+[PASS] test_setTokenURI_onlyOwner() (gas: 88089)
+[PASS] test_setTokenURI_revertsForNonExistentToken() (gas: 33241)
+[PASS] test_supportsInterface_AccessControl() (gas: 5870)
+[PASS] test_supportsInterface_ERC165() (gas: 6090)
+[PASS] test_supportsInterface_ERC721() (gas: 5981)
+[PASS] test_supportsInterface_randomInterface() (gas: 6115)
+[PASS] test_tokenURI_revertsForNonExistentToken() (gas: 12822)
+[PASS] test_transfer_happyPath() (gas: 165234)
+[PASS] test_transfer_revertsForNonExistentToken() (gas: 46318)
+[PASS] test_transfer_revertsIfOracleDenies() (gas: 86871)
+[PASS] test_transfer_revertsIfOracleNotSet() (gas: 4505636)
+[PASS] test_transfer_revertsOnZeroAddress() (gas: 43799)
+Suite result: ok. 34 passed; 0 failed; 0 skipped; finished in 173.84ms (184.77ms CPU time)
+
+Ran 42 tests for test/AevumRegistry.t.sol:AevumRegistryTest
+[PASS] testFuzz_createAgent(string,string) (runs: 256, μ: 269656, ~: 271319)
+[PASS] testFuzz_updateMemoryPointer(uint256) (runs: 256, μ: 289148, ~: 289571)
+[PASS] test_createAgentFor_happyPath() (gas: 261834)
+[PASS] test_createAgentFor_revertsForNonRegistrar() (gas: 41423)
+[PASS] test_createAgentFor_revertsOnEmptyName() (gas: 97517)
+[PASS] test_createAgentFor_revertsOnZeroOwner() (gas: 95317)
+[PASS] test_createAgentWithMemory_happyPath() (gas: 319506)
+[PASS] test_createAgentWithMemory_revertsForNonRegistrar() (gas: 42214)
+[PASS] test_createAgentWithMemory_revertsOnEmptyName() (gas: 98350)
+[PASS] test_createAgentWithMemory_revertsOnZeroAddress() (gas: 96109)
+[PASS] test_createAgentWithMemory_revertsOnZeroRoot() (gas: 98133)
+[PASS] test_createAgent_emitsEvent() (gas: 201956)
+[PASS] test_createAgent_incrementsId() (gas: 508539)
+[PASS] test_createAgent_revertsOnEmptyName() (gas: 38791)
+[PASS] test_createAgent_storesStruct() (gas: 222650)
+[PASS] test_getAgent_revertsForMissing() (gas: 26227)
+[PASS] test_getAgentsByOwner_returnsAll() (gas: 557293)
+[PASS] test_memoryPointerOf() (gas: 274634)
+[PASS] test_ownerOf_andExists() (gas: 218231)
+[PASS] test_ownerOf_revertsForMissingAgent() (gas: 11295)
+[PASS] test_setRegistrar_enableAndDisable() (gas: 110783)
+[PASS] test_setRegistrar_onlyOwner() (gas: 35682)
+[PASS] test_setRegistrar_revertsOnZeroAddress() (gas: 40539)
+[PASS] test_transferOwnershipFor_happyPath() (gas: 360386)
+[PASS] test_transferOwnershipFor_onlyRegistrar() (gas: 42715)
+[PASS] test_transferOwnershipFor_revertsForMissingAgent() (gas: 101283)
+[PASS] test_transferOwnershipFor_revertsOnStaleFrom() (gas: 365700)
+[PASS] test_transferOwnershipFor_revertsOnZeroAddress() (gas: 289511)
+[PASS] test_transferOwnership_happyPath() (gas: 314811)
+[PASS] test_transferOwnership_multipleAgents() (gas: 474086)
+[PASS] test_transferOwnership_onlyOwner() (gas: 233393)
+[PASS] test_transferOwnership_revertsForMissingAgent() (gas: 40083)
+[PASS] test_transferOwnership_revertsOnZeroAddress() (gas: 226294)
+[PASS] test_updateMemoryPointerFor_happyPath() (gas: 337840)
+[PASS] test_updateMemoryPointerFor_revertsForMissingAgent() (gas: 99432)
+[PASS] test_updateMemoryPointerFor_revertsForNonRegistrar() (gas: 40742)
+[PASS] test_updateMemoryPointerFor_revertsOnWrongOwner() (gas: 292702)
+[PASS] test_updateMemoryPointerFor_revertsOnZeroRoot() (gas: 289485)
+[PASS] test_updateMemoryPointer_happyPath() (gas: 361498)
+[PASS] test_updateMemoryPointer_onlyOwner() (gas: 231415)
+[PASS] test_updateMemoryPointer_revertsForMissingAgent() (gas: 38197)
+[PASS] test_updateMemoryPointer_revertsOnZeroRoot() (gas: 228648)
+Suite result: ok. 42 passed; 0 failed; 0 skipped; finished in 351.18ms (360.88ms CPU time)
+
+Ran 30 tests for test/AevumMemory.t.sol:AevumMemoryTest
+[PASS] testFuzz_logMemory_validDataType(uint8) (runs: 256, μ: 240306, ~: 240312)
+[PASS] testFuzz_pagination_count(uint256) (runs: 256, μ: 2129268, ~: 958551)
+[PASS] test_getAgentMemories_emptyForUnknownAgent() (gas: 8421)
+[PASS] test_getAgentMemories_latestFirstPagination() (gas: 979320)
+[PASS] test_getAgentMemories_limitExceedsTotal() (gas: 414169)
+[PASS] test_getAgentMemories_offsetSkipsNewest() (gas: 593304)
+[PASS] test_getAgentMemories_zeroLimit() (gas: 229027)
+[PASS] test_getMemory_revertsForMissingEntry() (gas: 25673)
+[PASS] test_grantAccess_onlyOwner() (gas: 266715)
+[PASS] test_grantAccess_revertsForMissingEntry() (gas: 42677)
+[PASS] test_grantAccess_revertsOnZeroAddress() (gas: 253609)
+[PASS] test_grantAndRevokeAccess() (gas: 393726)
+[PASS] test_hasAccess_revertsOnMissingEntry() (gas: 15770)
+[PASS] test_latestEntryId_returnsCorrectValue() (gas: 421971)
+[PASS] test_latestEntryId_zeroForUnknownAgent() (gas: 7803)
+[PASS] test_logMemory_happyPath() (gas: 245781)
+[PASS] test_logMemory_incrementsPerAgent() (gas: 622571)
+[PASS] test_logMemory_parentChain() (gas: 684963)
+[PASS] test_logMemory_revertsForNonOwner() (gas: 48309)
+[PASS] test_logMemory_revertsForUnknownAgent() (gas: 44726)
+[PASS] test_logMemory_revertsOnCrossAgentParent() (gas: 268217)
+[PASS] test_logMemory_revertsOnInvalidDataType() (gas: 48039)
+[PASS] test_logMemory_revertsOnInvalidParent() (gas: 50544)
+[PASS] test_logMemory_revertsOnZeroContentHash() (gas: 47363)
+[PASS] test_logMemory_revertsOnZeroStorageRoot() (gas: 47337)
+[PASS] test_logMemory_supportsAllDataTypes() (gas: 765692)
+[PASS] test_ownerChangeUpdatesAccess() (gas: 389778)
+[PASS] test_revokeAccess_onlyOwner() (gas: 266636)
+[PASS] test_revokeAccess_revertsForMissingEntry() (gas: 42642)
+[PASS] test_totalEntries_zeroForUnknownAgent() (gas: 7767)
+Suite result: ok. 30 passed; 0 failed; 0 skipped; finished in 653.97ms (662.77ms CPU time)
+
+╭------------------------------------------------+-----------------+--------+--------+--------+---------╮
+| src/AevumAgenticID.sol:AevumAgenticID Contract |                 |        |        |        |         |
++=======================================================================================================+
+| Deployment Cost                                | Deployment Size |        |        |        |         |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+|                                        2428279 |           11394 |        |        |        |         |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+|                                                |                 |        |        |        |         |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| Function Name                                  | Min             | Avg    | Median | Max    | # Calls |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| agentToToken                                   |            2480 |   2480 |   2480 |   2480 |       1 |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| authorizeUsage                                 |           24221 |  48626 |  48826 |  51048 |     265 |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| clone                                          |           30291 | 243022 | 338804 | 381018 |      11 |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| isAuthorizedFor                                |            2683 |   2683 |   2683 |   2683 |     263 |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| mint                                           |           28731 | 327134 | 339513 | 339645 |      50 |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| oracle                                         |            2426 |   2426 |   2426 |   2426 |       1 |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| ownerOf                                        |            2616 |   2616 |   2616 |   2616 |       9 |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| revokeUsage                                    |           26560 |  27138 |  26832 |  28866 |       5 |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| setOracle                                      |           24111 |  27371 |  27371 |  30632 |       2 |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| setTokenURI                                    |           24513 |  26361 |  24605 |  29966 |       3 |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| supportsInterface                              |             500 |    626 |    653 |    697 |       4 |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| tokenToAgent                                   |            2503 |   2503 |   2503 |   2503 |      18 |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| tokenURI                                       |            2650 |   4720 |   5755 |   5755 |       3 |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| totalSupply                                    |            2348 |   2348 |   2348 |   2348 |       2 |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| transfer                                       |           30816 |  97812 | 137704 | 154442 |      10 |
+|------------------------------------------------+-----------------+--------+--------+--------+---------|
+| usagePermissions                               |            2702 |   2702 |   2702 |   2702 |     262 |
+╰------------------------------------------------+-----------------+--------+--------+--------+---------╯
+
+╭------------------------------------------+-----------------+--------+--------+--------+---------╮
+| src/AevumMemory.sol:AevumMemory Contract |                 |        |        |        |         |
++=================================================================================================+
+| Deployment Cost                          | Deployment Size |        |        |        |         |
+|------------------------------------------+-----------------+--------+--------+--------+---------|
+|                                   949813 |            4250 |        |        |        |         |
+|------------------------------------------+-----------------+--------+--------+--------+---------|
+|                                          |                 |        |        |        |         |
+|------------------------------------------+-----------------+--------+--------+--------+---------|
+| Function Name                            | Min             | Avg    | Median | Max    | # Calls |
+|------------------------------------------+-----------------+--------+--------+--------+---------|
+| getAgentMemories                         |            2787 |  32687 |  13528 | 134346 |     264 |
+|------------------------------------------+-----------------+--------+--------+--------+---------|
+| getMemory                                |           13495 |  13676 |  13677 |  13677 |     262 |
+|------------------------------------------+-----------------+--------+--------+--------+---------|
+| grantAccess                              |           27063 |  46903 |  56676 |  56676 |       8 |
+|------------------------------------------+-----------------+--------+--------+--------+---------|
+| hasAccess                                |            2695 |   9571 |  10609 |  10609 |      21 |
+|------------------------------------------+-----------------+--------+--------+--------+---------|
+| latestEntryId                            |            2546 |   2546 |   2546 |   2546 |       3 |
+|------------------------------------------+-----------------+--------+--------+--------+---------|
+| logMemory                                |           33470 | 186128 | 180746 | 215330 |    3283 |
+|------------------------------------------+-----------------+--------+--------+--------+---------|
+| revokeAccess                             |           29558 |  33544 |  34734 |  35152 |       4 |
+|------------------------------------------+-----------------+--------+--------+--------+---------|
+| totalEntries                             |            2435 |   2435 |   2435 |   2435 |      10 |
+╰------------------------------------------+-----------------+--------+--------+--------+---------╯
+
+╭----------------------------------------------+-----------------+--------+--------+--------+---------╮
+| src/AevumRegistry.sol:AevumRegistry Contract |                 |        |        |        |         |
++=====================================================================================================+
+| Deployment Cost                              | Deployment Size |        |        |        |         |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+|                                      1595704 |            7074 |        |        |        |         |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+|                                              |                 |        |        |        |         |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| Function Name                                | Min             | Avg    | Median | Max    | # Calls |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| createAgent                                  |           27662 | 207388 | 190031 | 303594 |     599 |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| createAgentFor                               |           30276 |  70986 |  30437 | 192795 |       4 |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| createAgentWithMemory                        |           30869 |  71950 |  31084 | 235623 |       5 |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| exists                                       |            2538 |   2538 |   2538 |   2538 |    3285 |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| getAgent                                     |           14459 |  17590 |  15571 |  26397 |     532 |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| getAgentsByOwner                             |            2848 |   5479 |   5152 |   9622 |      13 |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| isRegistrar                                  |            2590 |   2590 |   2590 |   2590 |       2 |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| memoryPointerOf                              |            2514 |   2514 |   2514 |   2514 |       2 |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| owner                                        |            2374 |   2374 |   2374 |   2374 |      61 |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| ownerOf                                      |             605 |    630 |    605 |   2605 |    3324 |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| setRegistrar                                 |           24020 |  46769 |  47889 |  47889 |      62 |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| totalAgents                                  |            2313 |   2313 |   2313 |   2313 |       1 |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| transferOwnership                            |           26855 |  57092 |  63261 |  89961 |       7 |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| transferOwnershipFor                         |           29550 |  41308 |  32044 |  82939 |       5 |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| updateMemoryPointer                          |           29268 |  74740 |  75784 |  76084 |     267 |
+|----------------------------------------------+-----------------+--------+--------+--------+---------|
+| updateMemoryPointerFor                       |           29525 |  40455 |  32163 |  78336 |       5 |
+╰----------------------------------------------+-----------------+--------+--------+--------+---------╯
+
+╭-----------------------------------------------+-----------------+-------+--------+-------+---------╮
+| test/mocks/MockOracle.sol:MockOracle Contract |                 |       |        |       |         |
++====================================================================================================+
+| Deployment Cost                               | Deployment Size |       |        |       |         |
+|-----------------------------------------------+-----------------+-------+--------+-------+---------|
+|                                        238607 |             797 |       |        |       |         |
+|-----------------------------------------------+-----------------+-------+--------+-------+---------|
+|                                               |                 |       |        |       |         |
+|-----------------------------------------------+-----------------+-------+--------+-------+---------|
+| Function Name                                 | Min             | Avg   | Median | Max   | # Calls |
+|-----------------------------------------------+-----------------+-------+--------+-------+---------|
+| setCloneShouldVerify                          |           26551 | 26551 |  26551 | 26551 |       1 |
+|-----------------------------------------------+-----------------+-------+--------+-------+---------|
+| setShouldVerify                               |           26471 | 26471 |  26471 | 26471 |       1 |
+|-----------------------------------------------+-----------------+-------+--------+-------+---------|
+| verifyClone                                   |            3001 |  3001 |   3001 |  3001 |       8 |
+|-----------------------------------------------+-----------------+-------+--------+-------+---------|
+| verifyTransfer                                |            3156 |  3156 |   3156 |  3156 |       7 |
+╰-----------------------------------------------+-----------------+-------+--------+-------+---------╯
+
+
+Ran 4 test suites in 1.49s (1.21s CPU time): 113 tests passed, 0 failed, 0 skipped (113 total tests)

@@ -1,0 +1,159 @@
+Compiling 47 files with Solc 0.8.24
+Solc 0.8.24 finished in 6.72s
+Compiler run successful!
+Analysing contracts...
+Running tests...
+
+Ran 7 tests for test/Integration.t.sol:IntegrationTest
+[PASS] test_acl_followsOwnership() (gas: 611451)
+[PASS] test_clone_copiesMemoryPointer() (gas: 1297279)
+[PASS] test_clone_usesCreateAgentWithMemory() (gas: 727715)
+[PASS] test_fullLifecycle_mintLogTransfer() (gas: 1478681)
+[PASS] test_multiAgent_independentMemories() (gas: 1613895)
+[PASS] test_transferCloneTransfer_chain() (gas: 789453)
+[PASS] test_usagePermissions_andMemory() (gas: 739906)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 104.53ms (95.05ms CPU time)
+
+Ran 34 tests for test/AevumAgenticID.t.sol:AevumAgenticIDTest
+[PASS] testFuzz_authorizeUsage_randomPermissions(uint256) (runs: 256, μ: 48305, ~: 48305)
+[PASS] test_authorizeAndRevokeUsage() (gas: 46323)
+[PASS] test_authorizeUsage_adminCanAuthorize() (gas: 47616)
+[PASS] test_authorizeUsage_revertsForNonOwner() (gas: 21435)
+[PASS] test_authorizeUsage_revertsOnZeroAddress() (gas: 17203)
+[PASS] test_authorizeUsage_zeroPermissions() (gas: 27671)
+[PASS] test_clone_createsCopy() (gas: 465932)
+[PASS] test_clone_multipleClones() (gas: 864984)
+[PASS] test_clone_noMemoryPointer() (gas: 348762)
+[PASS] test_clone_revertsForNonExistentToken() (gas: 22952)
+[PASS] test_clone_revertsIfOracleDenies() (gas: 40836)
+[PASS] test_clone_revertsOnZeroAddress() (gas: 20015)
+[PASS] test_clone_revertsWhenOracleNotSet() (gas: 6749778)
+[PASS] test_isAuthorizedFor_falseByDefault() (gas: 13132)
+[PASS] test_mint_createsAgentAndNft() (gas: 42004)
+[PASS] test_mint_emitsEvent() (gas: 300688)
+[PASS] test_mint_multipleIncrementsSupply() (gas: 569504)
+[PASS] test_mint_revertsOnZeroAddress() (gas: 15978)
+[PASS] test_revokeUsage_adminCanRevoke() (gas: 39665)
+[PASS] test_revokeUsage_revertsForNonOwner() (gas: 50685)
+[PASS] test_revokeUsage_revertsWhenNone() (gas: 22541)
+[PASS] test_setOracle_adminOnly() (gas: 28741)
+[PASS] test_setTokenURI_onlyOwner() (gas: 33090)
+[PASS] test_setTokenURI_revertsForNonExistentToken() (gas: 12687)
+[PASS] test_supportsInterface_AccessControl() (gas: 6459)
+[PASS] test_supportsInterface_ERC165() (gas: 6687)
+[PASS] test_supportsInterface_ERC721() (gas: 6565)
+[PASS] test_supportsInterface_randomInterface() (gas: 6712)
+[PASS] test_tokenURI_revertsForNonExistentToken() (gas: 13730)
+[PASS] test_transfer_happyPath() (gas: 154060)
+[PASS] test_transfer_revertsForNonExistentToken() (gas: 25270)
+[PASS] test_transfer_revertsIfOracleDenies() (gas: 41446)
+[PASS] test_transfer_revertsIfOracleNotSet() (gas: 6750115)
+[PASS] test_transfer_revertsOnZeroAddress() (gas: 22487)
+Suite result: ok. 34 passed; 0 failed; 0 skipped; finished in 300.11ms (354.08ms CPU time)
+
+Ran 30 tests for test/AevumMemory.t.sol:AevumMemoryTest
+[PASS] testFuzz_logMemory_validDataType(uint8) (runs: 256, μ: 215142, ~: 215142)
+[PASS] testFuzz_pagination_count(uint256) (runs: 256, μ: 1560770, ~: 808337)
+[PASS] test_getAgentMemories_emptyForUnknownAgent() (gas: 10133)
+[PASS] test_getAgentMemories_latestFirstPagination() (gas: 815013)
+[PASS] test_getAgentMemories_limitExceedsTotal() (gas: 362527)
+[PASS] test_getAgentMemories_offsetSkipsNewest() (gas: 509343)
+[PASS] test_getAgentMemories_zeroLimit() (gas: 212601)
+[PASS] test_getMemory_revertsForMissingEntry() (gas: 28494)
+[PASS] test_grantAccess_onlyOwner() (gas: 222689)
+[PASS] test_grantAccess_revertsForMissingEntry() (gas: 22566)
+[PASS] test_grantAccess_revertsOnZeroAddress() (gas: 215485)
+[PASS] test_grantAndRevokeAccess() (gas: 252170)
+[PASS] test_hasAccess_revertsOnMissingEntry() (gas: 17509)
+[PASS] test_latestEntryId_returnsCorrectValue() (gas: 360063)
+[PASS] test_latestEntryId_zeroForUnknownAgent() (gas: 8575)
+[PASS] test_logMemory_happyPath() (gas: 219487)
+[PASS] test_logMemory_incrementsPerAgent() (gas: 553613)
+[PASS] test_logMemory_parentChain() (gas: 559158)
+[PASS] test_logMemory_revertsForNonOwner() (gas: 29395)
+[PASS] test_logMemory_revertsForUnknownAgent() (gas: 25172)
+[PASS] test_logMemory_revertsOnCrossAgentParent() (gas: 228637)
+[PASS] test_logMemory_revertsOnInvalidDataType() (gas: 29043)
+[PASS] test_logMemory_revertsOnInvalidParent() (gas: 31719)
+[PASS] test_logMemory_revertsOnZeroContentHash() (gas: 28418)
+[PASS] test_logMemory_revertsOnZeroStorageRoot() (gas: 28403)
+[PASS] test_logMemory_supportsAllDataTypes() (gas: 651307)
+[PASS] test_ownerChangeUpdatesAccess() (gas: 298138)
+[PASS] test_revokeAccess_onlyOwner() (gas: 222611)
+[PASS] test_revokeAccess_revertsForMissingEntry() (gas: 22532)
+[PASS] test_totalEntries_zeroForUnknownAgent() (gas: 8528)
+Suite result: ok. 30 passed; 0 failed; 0 skipped; finished in 965.84ms (1.03s CPU time)
+
+Ran 42 tests for test/AevumRegistry.t.sol:AevumRegistryTest
+[PASS] testFuzz_createAgent(string,string) (runs: 256, μ: 233647, ~: 238525)
+[PASS] testFuzz_updateMemoryPointer(uint256) (runs: 256, μ: 234928, ~: 235628)
+[PASS] test_createAgentFor_happyPath() (gas: 212208)
+[PASS] test_createAgentFor_revertsForNonRegistrar() (gas: 20301)
+[PASS] test_createAgentFor_revertsOnEmptyName() (gas: 47366)
+[PASS] test_createAgentFor_revertsOnZeroOwner() (gas: 45196)
+[PASS] test_createAgentWithMemory_happyPath() (gas: 262200)
+[PASS] test_createAgentWithMemory_revertsForNonRegistrar() (gas: 20989)
+[PASS] test_createAgentWithMemory_revertsOnEmptyName() (gas: 48098)
+[PASS] test_createAgentWithMemory_revertsOnZeroAddress() (gas: 45885)
+[PASS] test_createAgentWithMemory_revertsOnZeroRoot() (gas: 48130)
+[PASS] test_createAgent_emitsEvent() (gas: 185442)
+[PASS] test_createAgent_incrementsId() (gas: 431782)
+[PASS] test_createAgent_revertsOnEmptyName() (gas: 17806)
+[PASS] test_createAgent_storesStruct() (gas: 192225)
+[PASS] test_getAgent_revertsForMissing() (gas: 28760)
+[PASS] test_getAgentsByOwner_returnsAll() (gas: 470241)
+[PASS] test_memoryPointerOf() (gas: 228642)
+[PASS] test_ownerOf_andExists() (gas: 188271)
+[PASS] test_ownerOf_revertsForMissingAgent() (gas: 12492)
+[PASS] test_setRegistrar_enableAndDisable() (gas: 34430)
+[PASS] test_setRegistrar_onlyOwner() (gas: 15451)
+[PASS] test_setRegistrar_revertsOnZeroAddress() (gas: 13881)
+[PASS] test_transferOwnershipFor_happyPath() (gas: 232945)
+[PASS] test_transferOwnershipFor_onlyRegistrar() (gas: 22296)
+[PASS] test_transferOwnershipFor_revertsForMissingAgent() (gas: 52036)
+[PASS] test_transferOwnershipFor_revertsOnStaleFrom() (gas: 234352)
+[PASS] test_transferOwnershipFor_revertsOnZeroAddress() (gas: 216327)
+[PASS] test_transferOwnership_happyPath() (gas: 213670)
+[PASS] test_transferOwnership_multipleAgents() (gas: 351626)
+[PASS] test_transferOwnership_onlyOwner() (gas: 192230)
+[PASS] test_transferOwnership_revertsForMissingAgent() (gas: 19830)
+[PASS] test_transferOwnership_revertsOnZeroAddress() (gas: 186768)
+[PASS] test_updateMemoryPointerFor_happyPath() (gas: 258116)
+[PASS] test_updateMemoryPointerFor_revertsForMissingAgent() (gas: 50196)
+[PASS] test_updateMemoryPointerFor_revertsForNonRegistrar() (gas: 20333)
+[PASS] test_updateMemoryPointerFor_revertsOnWrongOwner() (gas: 219868)
+[PASS] test_updateMemoryPointerFor_revertsOnZeroRoot() (gas: 216523)
+[PASS] test_updateMemoryPointer_happyPath() (gas: 257950)
+[PASS] test_updateMemoryPointer_onlyOwner() (gas: 190321)
+[PASS] test_updateMemoryPointer_revertsForMissingAgent() (gas: 17976)
+[PASS] test_updateMemoryPointer_revertsOnZeroRoot() (gas: 187430)
+Suite result: ok. 42 passed; 0 failed; 0 skipped; finished in 973.94ms (1.02s CPU time)
+
+╭--------------------+--------+--------+---------╮
+| Test Suite         | Passed | Failed | Skipped |
++================================================+
+| AevumAgenticIDTest | 34     | 0      | 0       |
+|--------------------+--------+--------+---------|
+| AevumMemoryTest    | 30     | 0      | 0       |
+|--------------------+--------+--------+---------|
+| AevumRegistryTest  | 42     | 0      | 0       |
+|--------------------+--------+--------+---------|
+| IntegrationTest    | 7      | 0      | 0       |
+╰--------------------+--------+--------+---------╯
+
+
+╭---------------------------+-------------------+-------------------+-----------------+-----------------╮
+| File                      | % Lines           | % Statements      | % Branches      | % Funcs         |
++=======================================================================================================+
+| script/Deploy.s.sol       | 0.00% (0/23)      | 0.00% (0/28)      | 100.00% (0/0)   | 0.00% (0/1)     |
+|---------------------------+-------------------+-------------------+-----------------+-----------------|
+| src/AevumAgenticID.sol    | 96.30% (78/81)    | 94.85% (92/97)    | 85.00% (17/20)  | 92.31% (12/13)  |
+|---------------------------+-------------------+-------------------+-----------------+-----------------|
+| src/AevumMemory.sol       | 100.00% (56/56)   | 100.00% (66/66)   | 100.00% (17/17) | 100.00% (11/11) |
+|---------------------------+-------------------+-------------------+-----------------+-----------------|
+| src/AevumRegistry.sol     | 100.00% (104/104) | 100.00% (115/115) | 100.00% (26/26) | 100.00% (16/16) |
+|---------------------------+-------------------+-------------------+-----------------+-----------------|
+| test/mocks/MockOracle.sol | 100.00% (8/8)     | 100.00% (4/4)     | 100.00% (0/0)   | 100.00% (4/4)   |
+|---------------------------+-------------------+-------------------+-----------------+-----------------|
+| Total                     | 90.44% (246/272)  | 89.35% (277/310)  | 95.24% (60/63)  | 95.56% (43/45)  |
+╰---------------------------+-------------------+-------------------+-----------------+-----------------╯
