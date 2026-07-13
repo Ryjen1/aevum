@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
 import {AevumRegistry} from "../src/AevumRegistry.sol";
@@ -270,7 +270,6 @@ contract AevumRegistryTest is Test {
     }
 
     function test_transferOwnershipFor_happyPath() public {
-        // Create agent via normal flow, then exercise the registrar path.
         vm.prank(alice);
         uint256 id = registry.createAgent("A", "memory");
 
@@ -291,7 +290,6 @@ contract AevumRegistryTest is Test {
 
         vm.prank(registry.owner());
         registry.setRegistrar(address(this), true);
-        // From address doesn't match the current owner.
         vm.expectRevert(abi.encodeWithSignature("NotCurrentOwner(address,uint256)", alice, id));
         registry.transferOwnershipFor(id, alice, carol);
     }
@@ -303,5 +301,181 @@ contract AevumRegistryTest is Test {
         registry.setRegistrar(address(this), true);
         registry.updateMemoryPointerFor(id, alice, keccak256("r"), 100);
         assertEq(registry.memoryPointerOf(id), keccak256("r"));
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                  ADDITIONAL TESTS — Wave 2 coverage
+    //////////////////////////////////////////////////////////////*/
+
+    /// @notice setRegistrar: happy path — enable then disable
+    function test_setRegistrar_enableAndDisable() public {
+        address registrar = makeAddr("registrar");
+        vm.prank(registry.owner());
+        registry.setRegistrar(registrar, true);
+        assertTrue(registry.isRegistrar(registrar));
+
+        vm.prank(registry.owner());
+        registry.setRegistrar(registrar, false);
+        assertFalse(registry.isRegistrar(registrar));
+    }
+
+    /// @notice setRegistrar: reverts on zero address
+    function test_setRegistrar_revertsOnZeroAddress() public {
+        vm.prank(registry.owner());
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddress()"));
+        registry.setRegistrar(address(0), true);
+    }
+
+    /// @notice createAgentFor: reverts on empty name
+    function test_createAgentFor_revertsOnEmptyName() public {
+        vm.prank(registry.owner());
+        registry.setRegistrar(address(this), true);
+        vm.expectRevert(abi.encodeWithSignature("EmptyName()"));
+        registry.createAgentFor("", "memory", bob);
+    }
+
+    /// @notice createAgentWithMemory: happy path
+    function test_createAgentWithMemory_happyPath() public {
+        vm.prank(registry.owner());
+        registry.setRegistrar(address(this), true);
+
+        bytes32 root = keccak256("mem-root");
+        uint256 id = registry.createAgentWithMemory("AgentM", "memory", carol, root, 512);
+        assertEq(id, 1);
+
+        AevumRegistry.Agent memory a = registry.getAgent(id);
+        assertEq(a.owner, carol);
+        assertEq(a.memoryPointer, root);
+        assertEq(a.memorySize, 512);
+    }
+
+    /// @notice createAgentWithMemory: reverts for non-registrar
+    function test_createAgentWithMemory_revertsForNonRegistrar() public {
+        vm.expectRevert(abi.encodeWithSignature("NotRegistrar(address)", address(this)));
+        registry.createAgentWithMemory("A", "memory", bob, keccak256("r"), 100);
+    }
+
+    /// @notice createAgentWithMemory: reverts on zero address
+    function test_createAgentWithMemory_revertsOnZeroAddress() public {
+        vm.prank(registry.owner());
+        registry.setRegistrar(address(this), true);
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddress()"));
+        registry.createAgentWithMemory("A", "memory", address(0), keccak256("r"), 100);
+    }
+
+    /// @notice createAgentWithMemory: reverts on empty name
+    function test_createAgentWithMemory_revertsOnEmptyName() public {
+        vm.prank(registry.owner());
+        registry.setRegistrar(address(this), true);
+        vm.expectRevert(abi.encodeWithSignature("EmptyName()"));
+        registry.createAgentWithMemory("", "memory", bob, keccak256("r"), 100);
+    }
+
+    /// @notice createAgentWithMemory: reverts on zero root
+    function test_createAgentWithMemory_revertsOnZeroRoot() public {
+        vm.prank(registry.owner());
+        registry.setRegistrar(address(this), true);
+        vm.expectRevert(abi.encodeWithSignature("ZeroMemoryPointer()"));
+        registry.createAgentWithMemory("A", "memory", bob, bytes32(0), 100);
+    }
+
+    /// @notice transferOwnershipFor: reverts for missing agent
+    function test_transferOwnershipFor_revertsForMissingAgent() public {
+        vm.prank(registry.owner());
+        registry.setRegistrar(address(this), true);
+        vm.expectRevert(abi.encodeWithSignature("AgentDoesNotExist(uint256)", 999));
+        registry.transferOwnershipFor(999, alice, bob);
+    }
+
+    /// @notice transferOwnershipFor: reverts on zero address
+    function test_transferOwnershipFor_revertsOnZeroAddress() public {
+        vm.prank(alice);
+        uint256 id = registry.createAgent("A", "memory");
+        vm.prank(registry.owner());
+        registry.setRegistrar(address(this), true);
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddress()"));
+        registry.transferOwnershipFor(id, alice, address(0));
+    }
+
+    /// @notice updateMemoryPointerFor: reverts for non-registrar
+    function test_updateMemoryPointerFor_revertsForNonRegistrar() public {
+        vm.expectRevert(abi.encodeWithSignature("NotRegistrar(address)", address(this)));
+        registry.updateMemoryPointerFor(1, alice, keccak256("r"), 100);
+    }
+
+    /// @notice updateMemoryPointerFor: reverts on zero root hash
+    function test_updateMemoryPointerFor_revertsOnZeroRoot() public {
+        vm.prank(alice);
+        uint256 id = registry.createAgent("A", "memory");
+        vm.prank(registry.owner());
+        registry.setRegistrar(address(this), true);
+        vm.expectRevert(abi.encodeWithSignature("ZeroMemoryPointer()"));
+        registry.updateMemoryPointerFor(id, alice, bytes32(0), 100);
+    }
+
+    /// @notice updateMemoryPointerFor: reverts for missing agent
+    function test_updateMemoryPointerFor_revertsForMissingAgent() public {
+        vm.prank(registry.owner());
+        registry.setRegistrar(address(this), true);
+        vm.expectRevert(abi.encodeWithSignature("AgentDoesNotExist(uint256)", 999));
+        registry.updateMemoryPointerFor(999, alice, keccak256("r"), 100);
+    }
+
+    /// @notice updateMemoryPointerFor: reverts when from != current owner
+    function test_updateMemoryPointerFor_revertsOnWrongOwner() public {
+        vm.prank(alice);
+        uint256 id = registry.createAgent("A", "memory");
+        vm.prank(registry.owner());
+        registry.setRegistrar(address(this), true);
+        vm.expectRevert(abi.encodeWithSignature("NotCurrentOwner(address,uint256)", bob, id));
+        registry.updateMemoryPointerFor(id, bob, keccak256("r"), 100);
+    }
+
+    /// @notice ownerOf: reverts for missing agent
+    function test_ownerOf_revertsForMissingAgent() public {
+        vm.expectRevert(abi.encodeWithSignature("AgentDoesNotExist(uint256)", 999));
+        registry.ownerOf(999);
+    }
+
+    /// @notice Multiple agents, ownership transfer removes from correct owner list
+    function test_transferOwnership_multipleAgents() public {
+        vm.startPrank(alice);
+        uint256 a1 = registry.createAgent("A1", "memory");
+        uint256 a2 = registry.createAgent("A2", "orchestrator");
+        vm.stopPrank();
+
+        assertEq(registry.getAgentsByOwner(alice).length, 2);
+
+        vm.prank(alice);
+        registry.transferOwnership(a1, bob);
+
+        uint256[] memory aliceList = registry.getAgentsByOwner(alice);
+        assertEq(aliceList.length, 1);
+        assertEq(aliceList[0], a2);
+
+        uint256[] memory bobList = registry.getAgentsByOwner(bob);
+        assertEq(bobList.length, 1);
+        assertEq(bobList[0], a1);
+    }
+
+    /// @notice Fuzz: createAgent with arbitrary name/role
+    function testFuzz_createAgent(string calldata name, string calldata role) public {
+        vm.assume(bytes(name).length > 0);
+        vm.prank(alice);
+        uint256 id = registry.createAgent(name, role);
+        assertEq(id, 1);
+        AevumRegistry.Agent memory a = registry.getAgent(id);
+        assertEq(a.name, name);
+        assertEq(a.role, role);
+    }
+
+    /// @notice Fuzz: updateMemoryPointer with random size
+    function testFuzz_updateMemoryPointer(uint256 size) public {
+        vm.prank(alice);
+        uint256 id = registry.createAgent("A", "memory");
+        bytes32 root = keccak256("blob");
+        vm.prank(alice);
+        registry.updateMemoryPointer(id, root, size);
+        assertEq(registry.getAgent(id).memorySize, size);
     }
 }
