@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
 import {AevumRegistry} from "../src/AevumRegistry.sol";
@@ -142,20 +142,17 @@ contract AevumMemoryTest is Test {
         }
         vm.stopPrank();
 
-        // Latest first: page 0 should be [5, 4, 3]
         uint256[] memory page1 = memoryLog.getAgentMemories(aliceAgent, 0, 3);
         assertEq(page1.length, 3);
         assertEq(page1[0], 5);
         assertEq(page1[1], 4);
         assertEq(page1[2], 3);
 
-        // Page 1: [2, 1]
         uint256[] memory page2 = memoryLog.getAgentMemories(aliceAgent, 3, 3);
         assertEq(page2.length, 2);
         assertEq(page2[0], 2);
         assertEq(page2[1], 1);
 
-        // Past the end -> empty
         uint256[] memory empty = memoryLog.getAgentMemories(aliceAgent, 100, 10);
         assertEq(empty.length, 0);
     }
@@ -173,7 +170,6 @@ contract AevumMemoryTest is Test {
         vm.prank(alice);
         uint256 id = memoryLog.logMemory(aliceAgent, keccak256("x"), keccak256("y"), 0, 0);
 
-        // Initially no one but the owner.
         assertFalse(memoryLog.hasAccess(aliceAgent, id, bob));
         assertTrue(memoryLog.hasAccess(aliceAgent, id, alice));
 
@@ -208,14 +204,12 @@ contract AevumMemoryTest is Test {
         vm.prank(alice);
         uint256 id = memoryLog.logMemory(aliceAgent, keccak256("x"), keccak256("y"), 0, 0);
 
-        // Alice transfers the agent to Bob; Bob is now the implicit owner.
         vm.prank(alice);
         registry.transferOwnership(aliceAgent, bob);
 
         assertTrue(memoryLog.hasAccess(aliceAgent, id, bob));
         assertFalse(memoryLog.hasAccess(aliceAgent, id, alice));
 
-        // Bob (new owner) can grant access to Alice.
         vm.prank(bob);
         memoryLog.grantAccess(aliceAgent, id, alice);
         assertTrue(memoryLog.hasAccess(aliceAgent, id, alice));
@@ -233,5 +227,136 @@ contract AevumMemoryTest is Test {
         assertEq(a1, 1);
         assertEq(a2, 2);
         assertEq(b1, 1, "entry id counter is per-agent");
+    }
+
+    /*//////////////////////////////////////////////////////////////
+              ADDITIONAL TESTS — Wave 2 coverage
+    //////////////////////////////////////////////////////////////*/
+
+    /// @notice getMemory: reverts for missing entry
+    function test_getMemory_revertsForMissingEntry() public {
+        vm.expectRevert(abi.encodeWithSignature("EntryDoesNotExist(uint256,uint256)", aliceAgent, 1));
+        memoryLog.getMemory(aliceAgent, 1);
+    }
+
+    /// @notice totalEntries: returns 0 for unknown agent
+    function test_totalEntries_zeroForUnknownAgent() public view {
+        assertEq(memoryLog.totalEntries(999), 0);
+    }
+
+    /// @notice latestEntryId: returns 0 for unknown agent
+    function test_latestEntryId_zeroForUnknownAgent() public view {
+        assertEq(memoryLog.latestEntryId(999), 0);
+    }
+
+    /// @notice latestEntryId: returns correct value
+    function test_latestEntryId_returnsCorrectValue() public {
+        vm.prank(alice);
+        memoryLog.logMemory(aliceAgent, keccak256("a"), keccak256("r"), 0, 0);
+        assertEq(memoryLog.latestEntryId(aliceAgent), 1);
+
+        vm.prank(alice);
+        memoryLog.logMemory(aliceAgent, keccak256("b"), keccak256("r"), 0, 0);
+        assertEq(memoryLog.latestEntryId(aliceAgent), 2);
+    }
+
+    /// @notice grantAccess: reverts for missing entry
+    function test_grantAccess_revertsForMissingEntry() public {
+        vm.expectRevert(abi.encodeWithSignature("EntryDoesNotExist(uint256,uint256)", aliceAgent, 1));
+        memoryLog.grantAccess(aliceAgent, 1, bob);
+    }
+
+    /// @notice grantAccess: reverts on zero address
+    function test_grantAccess_revertsOnZeroAddress() public {
+        vm.prank(alice);
+        uint256 id = memoryLog.logMemory(aliceAgent, keccak256("x"), keccak256("y"), 0, 0);
+
+        vm.expectRevert(abi.encodeWithSignature("AgentDoesNotExist(uint256)", 0));
+        memoryLog.grantAccess(aliceAgent, id, address(0));
+    }
+
+    /// @notice revokeAccess: reverts for missing entry
+    function test_revokeAccess_revertsForMissingEntry() public {
+        vm.expectRevert(abi.encodeWithSignature("EntryDoesNotExist(uint256,uint256)", aliceAgent, 1));
+        memoryLog.revokeAccess(aliceAgent, 1, bob);
+    }
+
+    /// @notice revokeAccess: reverts for non-owner
+    function test_revokeAccess_onlyOwner() public {
+        vm.prank(alice);
+        uint256 id = memoryLog.logMemory(aliceAgent, keccak256("x"), keccak256("y"), 0, 0);
+
+        vm.prank(bob);
+        vm.expectRevert(abi.encodeWithSignature("NotAgentOwner(address,uint256)", bob, aliceAgent));
+        memoryLog.revokeAccess(aliceAgent, id, carol);
+    }
+
+    /// @notice Pagination: limit=0 returns empty array
+    function test_getAgentMemories_zeroLimit() public {
+        vm.prank(alice);
+        memoryLog.logMemory(aliceAgent, keccak256("x"), keccak256("r"), 0, 0);
+
+        uint256[] memory r = memoryLog.getAgentMemories(aliceAgent, 0, 0);
+        assertEq(r.length, 0);
+    }
+
+    /// @notice Pagination: limit exceeds total entries
+    function test_getAgentMemories_limitExceedsTotal() public {
+        vm.startPrank(alice);
+        memoryLog.logMemory(aliceAgent, keccak256("a"), keccak256("r"), 0, 0);
+        memoryLog.logMemory(aliceAgent, keccak256("b"), keccak256("r"), 0, 0);
+        vm.stopPrank();
+
+        uint256[] memory r = memoryLog.getAgentMemories(aliceAgent, 0, 100);
+        assertEq(r.length, 2);
+        assertEq(r[0], 2);
+        assertEq(r[1], 1);
+    }
+
+    /// @notice Pagination: offset=1 skips newest, returns rest
+    function test_getAgentMemories_offsetSkipsNewest() public {
+        vm.startPrank(alice);
+        memoryLog.logMemory(aliceAgent, keccak256("a"), keccak256("r"), 0, 0);
+        memoryLog.logMemory(aliceAgent, keccak256("b"), keccak256("r"), 0, 0);
+        memoryLog.logMemory(aliceAgent, keccak256("c"), keccak256("r"), 0, 0);
+        vm.stopPrank();
+
+        uint256[] memory r = memoryLog.getAgentMemories(aliceAgent, 1, 10);
+        assertEq(r.length, 2);
+        assertEq(r[0], 2);
+        assertEq(r[1], 1);
+    }
+
+    /// @notice logMemory with parent from a different agent should fail
+    function test_logMemory_revertsOnCrossAgentParent() public {
+        vm.prank(alice);
+        uint256 entry = memoryLog.logMemory(aliceAgent, keccak256("x"), keccak256("y"), 0, 0);
+
+        // Bob tries to use alice's entry as parent for bob's agent
+        vm.prank(bob);
+        vm.expectRevert(abi.encodeWithSignature("EntryDoesNotExist(uint256,uint256)", bobAgent, entry));
+        memoryLog.logMemory(bobAgent, keccak256("z"), keccak256("w"), 0, entry);
+    }
+
+    /// @notice Fuzz: logMemory with random dataType (valid range)
+    function testFuzz_logMemory_validDataType(uint8 dt) public {
+        vm.assume(dt <= 3);
+        vm.prank(alice);
+        uint256 id = memoryLog.logMemory(aliceAgent, keccak256("c"), keccak256("r"), dt, 0);
+        assertEq(id, 1);
+        assertEq(uint256(memoryLog.getMemory(aliceAgent, 1).dataType), uint256(dt));
+    }
+
+    /// @notice Fuzz: pagination always returns correct count
+    function testFuzz_pagination_count(uint256 count) public {
+        vm.assume(count > 0 && count <= 50);
+        vm.startPrank(alice);
+        for (uint256 i = 0; i < count; i++) {
+            memoryLog.logMemory(aliceAgent, bytes32(uint256(i + 1)), keccak256("r"), 0, 0);
+        }
+        vm.stopPrank();
+
+        uint256[] memory all = memoryLog.getAgentMemories(aliceAgent, 0, count);
+        assertEq(all.length, count);
     }
 }
